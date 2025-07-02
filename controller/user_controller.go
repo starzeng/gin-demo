@@ -1,13 +1,28 @@
-package handler
+package controller
 
 import (
 	"github.com/gin-gonic/gin"
 	"starzeng.com/gin-demo/common"
 	"starzeng.com/gin-demo/middleware"
 	"starzeng.com/gin-demo/model"
+	"starzeng.com/gin-demo/router"
 	"starzeng.com/gin-demo/utils"
 	"time"
 )
+
+type userController struct{}
+
+func (u userController) RouteRegister(group *gin.RouterGroup) {
+	group.POST("/login", Login)
+
+	auth := group.Group("/user", middleware.JWTAuth())
+
+	auth.GET("/profile", Profile)
+	auth.GET("/logout", Logout)
+	auth.GET("/admin", middleware.RequireRole("admin"), AdminOnly)
+	auth.POST("/write", middleware.RequirePermission("write"), WriteData)
+
+}
 
 type LoginReq struct {
 	Username string `json:"username" binding:"required"`
@@ -23,7 +38,7 @@ type LoginReq struct {
 // @Param data body LoginReq true "登录请求参数"
 // @Success 200 {object} common.Response
 // @Failure 401 {object} common.Response
-// @Router /login [post]
+// @Router /api/login [post]
 func Login(c *gin.Context) {
 	var req LoginReq
 	if err := c.ShouldBindJSON(&req); err != nil {
@@ -95,4 +110,8 @@ func AdminOnly(c *gin.Context) {
 // @Router /api/write [post]
 func WriteData(c *gin.Context) {
 	common.Success(c, gin.H{"msg": "写入成功"})
+}
+
+func init() {
+	router.Register(&userController{})
 }

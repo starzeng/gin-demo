@@ -46,6 +46,46 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/login": {
+            "post": {
+                "description": "使用用户名和密码进行登录，返回 JWT Token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "用户"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "登录请求参数",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/controller.LoginReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/logout": {
             "get": {
                 "security": [
@@ -126,46 +166,6 @@ const docTemplate = `{
                     }
                 }
             }
-        },
-        "/login": {
-            "post": {
-                "description": "使用用户名和密码进行登录，返回 JWT Token",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "用户"
-                ],
-                "summary": "用户登录",
-                "parameters": [
-                    {
-                        "description": "登录请求参数",
-                        "name": "data",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/handler.LoginReq"
-                        }
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/common.Response"
-                        }
-                    },
-                    "401": {
-                        "description": "Unauthorized",
-                        "schema": {
-                            "$ref": "#/definitions/common.Response"
-                        }
-                    }
-                }
-            }
         }
     },
     "definitions": {
@@ -181,7 +181,7 @@ const docTemplate = `{
                 }
             }
         },
-        "handler.LoginReq": {
+        "controller.LoginReq": {
             "type": "object",
             "required": [
                 "password",

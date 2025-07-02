@@ -9,17 +9,21 @@ import (
 
 type Config struct {
 	Server struct {
-		Name string `mapstructure:"name"`
-		Mode string `mapstructure:"mode"`
-		Port string `mapstructure:"port"`
+		Name         string `mapstructure:"name"`
+		Mode         string `mapstructure:"mode"`
+		Host         string `mapstructure:"host"`
+		Port         string `mapstructure:"port"`
+		RelativePath string `mapstructure:"relative_path"`
 	} `mapstructure:"server"`
 
 	MySQL struct {
-		Host     string `mapstructure:"host"`
-		Port     int    `mapstructure:"port"`
-		User     string `mapstructure:"user"`
-		Password string `mapstructure:"password"`
-		DBName   string `mapstructure:"dbname"`
+		Host         string `mapstructure:"host"`
+		Port         int    `mapstructure:"port"`
+		User         string `mapstructure:"user"`
+		Password     string `mapstructure:"password"`
+		DBName       string `mapstructure:"dbname"`
+		MaxIdleConns int    `mapstructure:"max_idle_conns"`
+		MaxOpenConns int    `mapstructure:"max_open_conns"`
 	} `mapstructure:"mysql"`
 
 	Redis struct {
@@ -49,4 +53,9 @@ func LoadConfig() {
 	}
 
 	fmt.Println("配置加载成功")
+}
+
+// GetServerAddr 获取server地址
+func GetServerAddr() string {
+	return AppConfig.Server.Host + ":" + AppConfig.Server.Port
 }

@@ -8,7 +8,7 @@ definitions:
       message:
         type: string
     type: object
-  handler.LoginReq:
+  controller.LoginReq:
     properties:
       password:
         type: string
@@ -44,6 +44,32 @@ paths:
       summary: 仅管理员可访问
       tags:
       - 权限
+  /api/login:
+    post:
+      consumes:
+      - application/json
+      description: 使用用户名和密码进行登录，返回 JWT Token
+      parameters:
+      - description: 登录请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/controller.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 用户登录
+      tags:
+      - 用户
   /api/logout:
     get:
       description: 将当前 JWT 加入黑名单
@@ -93,32 +119,6 @@ paths:
       summary: 写数据
       tags:
       - 权限
-  /login:
-    post:
-      consumes:
-      - application/json
-      description: 使用用户名和密码进行登录，返回 JWT Token
-      parameters:
-      - description: 登录请求参数
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/handler.LoginReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/common.Response'
-        "401":
-          description: Unauthorized
-          schema:
-            $ref: '#/definitions/common.Response'
-      summary: 用户登录
-      tags:
-      - 用户
 securityDefinitions:
   BearerAuth:
     in: header

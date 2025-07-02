@@ -1,7 +1,9 @@
 server:
   name: "gin-demo"
   mode: "debug"
+  host: localhost
   port: 8080
+  relative_path: "/api"
 
 mysql:
   host: "127.0.0.1"
@@ -9,6 +11,8 @@ mysql:
   user: "root"
   password: "123456"
   dbname: "go-gin"
+  max_idle_conns: 10
+  max_open_conns: 50
 
 redis:
   host: "127.0.0.1"

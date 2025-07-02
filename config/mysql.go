@@ -23,8 +23,8 @@ func InitMySQL() {
 
 	// 设置连接池参数
 	sqlDB, _ := DB.DB()
-	sqlDB.SetMaxIdleConns(10)
-	sqlDB.SetMaxOpenConns(50)
+	sqlDB.SetMaxIdleConns(cfg.MaxIdleConns)
+	sqlDB.SetMaxOpenConns(cfg.MaxOpenConns)
 
 	fmt.Println("MySQL连接成功")
 }

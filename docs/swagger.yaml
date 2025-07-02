@@ -1,0 +1,127 @@
+basePath: /
+definitions:
+  common.Response:
+    properties:
+      code:
+        type: integer
+      data: {}
+      message:
+        type: string
+    type: object
+  handler.LoginReq:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+host: localhost:8080
+info:
+  contact: {}
+  description: 示例项目：JWT + RBAC + Redis 黑名单 + Swagger 接口文档
+  title: Gin JWT RBAC Demo API
+  version: "1.0"
+paths:
+  /api/admin:
+    get:
+      description: 仅角色为 admin 的用户可访问
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 仅管理员可访问
+      tags:
+      - 权限
+  /api/logout:
+    get:
+      description: 将当前 JWT 加入黑名单
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 用户登出
+      tags:
+      - 用户
+  /api/profile:
+    get:
+      description: 返回当前登录用户的用户名与角色
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取用户信息
+      tags:
+      - 用户
+  /api/write:
+    post:
+      description: 需要拥有 write 权限的用户才可以访问
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 写数据
+      tags:
+      - 权限
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: 使用用户名和密码进行登录，返回 JWT Token
+      parameters:
+      - description: 登录请求参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/common.Response'
+      summary: 用户登录
+      tags:
+      - 用户
+securityDefinitions:
+  BearerAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

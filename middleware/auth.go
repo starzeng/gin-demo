@@ -72,6 +72,9 @@ func JWTAuth() gin.HandlerFunc {
 	}
 }
 
+// RequireRole 是一个中间件函数，用于验证用户的角色权限。
+// 参数 role 是一个字符串，表示所需的用户角色。
+// 返回值是一个 gin.HandlerFunc 类型的函数，可以作为 gin 框架的中间件使用。
 func RequireRole(role string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		if c.GetString("role") != role {
@@ -83,6 +86,10 @@ func RequireRole(role string) gin.HandlerFunc {
 	}
 }
 
+// RequirePermission 是一个中间件工厂函数，用于生成检查用户权限的中间件。
+// 参数 p 是用户需要具备的权限级别。
+// 返回值是一个 gin.HandlerFunc 类型的中间件，用于在处理请求前进行权限检查。
+// 此中间件主要用于控制对特定路由或资源的访问，确保只有具有特定权限的用户可以访问。
 func RequirePermission(p string) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		perms, _ := c.Get("permission")

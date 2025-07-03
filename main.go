@@ -8,6 +8,7 @@ import (
 	_ "starzeng.com/gin-demo/controller"
 	"starzeng.com/gin-demo/docs"
 	"starzeng.com/gin-demo/middleware"
+	"starzeng.com/gin-demo/model"
 	"starzeng.com/gin-demo/router"
 )
 
@@ -26,6 +27,11 @@ func main() {
 	// 初始化
 	config.InitMySQL()
 	config.InitRedis()
+
+	// 集中统一迁移所有模型
+	if err := model.AutoMigrate(config.DB); err != nil {
+		panic("模型迁移失败: " + err.Error())
+	}
 
 	r := gin.Default()
 

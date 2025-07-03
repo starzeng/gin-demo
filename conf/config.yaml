@@ -13,6 +13,7 @@ mysql:
   dbname: "go-gin"
   max_idle_conns: 10
   max_open_conns: 50
+  log_debug: true
 
 redis:
   host: "127.0.0.1"

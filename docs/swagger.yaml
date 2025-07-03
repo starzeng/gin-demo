@@ -18,6 +18,66 @@ definitions:
     - password
     - username
     type: object
+  model.Book:
+    properties:
+      author:
+        maxLength: 100
+        type: string
+      created_at:
+        type: string
+      description:
+        maxLength: 1000
+        type: string
+      id:
+        type: integer
+      price:
+        type: number
+      title:
+        maxLength: 200
+        type: string
+      updated_at:
+        type: string
+      version:
+        type: integer
+    required:
+    - author
+    - price
+    - title
+    type: object
+  model.BookQuery:
+    properties:
+      author:
+        description: 作者模糊查询
+        maxLength: 100
+        type: string
+      page:
+        description: 当前页码，默认1
+        minimum: 1
+        type: integer
+      page_size:
+        description: 每页条数，默认10，最大100
+        maximum: 100
+        minimum: 1
+        type: integer
+      title:
+        description: 书名模糊查询
+        maxLength: 200
+        type: string
+    type: object
+  model.PageResult:
+    properties:
+      list:
+        description: 数据列表，通常是切片，如 []Book
+      page:
+        description: 当前页码
+        type: integer
+      page_size:
+        description: 每页条数
+        type: integer
+      total:
+        description: 总记录数
+        type: integer
+    type: object
 host: localhost:8080
 info:
   contact: {}
@@ -25,6 +85,180 @@ info:
   title: Gin JWT RBAC Demo API
   version: "1.0"
 paths:
+  /api/book:
+    post:
+      consumes:
+      - application/json
+      description: 根据请求体中的书籍信息创建新书籍
+      parameters:
+      - description: 书籍信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 创建新书籍
+      tags:
+      - 书籍管理
+  /api/book/{id}:
+    delete:
+      description: 根据书籍 ID 删除对应书籍
+      parameters:
+      - description: 书籍ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 删除书籍
+      tags:
+      - 书籍管理
+    get:
+      description: 根据书籍 ID 获取详细信息
+      parameters:
+      - description: 书籍ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/model.Book'
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取书籍详情
+      tags:
+      - 书籍管理
+    put:
+      consumes:
+      - application/json
+      description: 根据书籍 ID 更新书籍数据
+      parameters:
+      - description: 书籍ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: 更新的书籍信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.Book'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 更新书籍信息
+      tags:
+      - 书籍管理
+  /api/book/list:
+    post:
+      consumes:
+      - application/json
+      description: 分页获取书籍信息列表
+      parameters:
+      - description: 查询参数（如分页）
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/model.BookQuery'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/common.Response'
+            - properties:
+                data:
+                  allOf:
+                  - $ref: '#/definitions/model.PageResult'
+                  - properties:
+                      list:
+                        items:
+                          $ref: '#/definitions/model.Book'
+                        type: array
+                    type: object
+              type: object
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/common.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 获取书籍列表
+      tags:
+      - 书籍管理
   /api/login:
     post:
       consumes:

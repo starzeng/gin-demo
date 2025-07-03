@@ -9,37 +9,6 @@
     "host": "localhost:8080",
     "basePath": "/",
     "paths": {
-        "/api/admin": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "仅角色为 admin 的用户可访问",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "权限"
-                ],
-                "summary": "仅管理员可访问",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/common.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/common.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/api/login": {
             "post": {
                 "description": "使用用户名和密码进行登录，返回 JWT Token",
@@ -80,7 +49,38 @@
                 }
             }
         },
-        "/api/logout": {
+        "/api/user/admin": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "仅角色为 admin 的用户可访问",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "权限"
+                ],
+                "summary": "仅管理员可访问",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/logout": {
             "get": {
                 "security": [
                     {
@@ -105,7 +105,7 @@
                 }
             }
         },
-        "/api/profile": {
+        "/api/user/profile": {
             "get": {
                 "security": [
                     {
@@ -130,7 +130,7 @@
                 }
             }
         },
-        "/api/write": {
+        "/api/user/write": {
             "post": {
                 "security": [
                     {

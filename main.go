@@ -5,6 +5,7 @@ import (
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"starzeng.com/gin-demo/config"
+	_ "starzeng.com/gin-demo/controller"
 	"starzeng.com/gin-demo/docs"
 	"starzeng.com/gin-demo/middleware"
 	"starzeng.com/gin-demo/router"
@@ -26,10 +27,9 @@ func main() {
 	config.InitMySQL()
 	config.InitRedis()
 
-	gin.SetMode(config.AppConfig.Server.Mode)
-	gin.ForceConsoleColor()
 	r := gin.Default()
 
+	// 初始化路由
 	router.InitRouter(r)
 
 	// Swagger 配置

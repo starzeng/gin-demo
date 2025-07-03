@@ -25,25 +25,6 @@ info:
   title: Gin JWT RBAC Demo API
   version: "1.0"
 paths:
-  /api/admin:
-    get:
-      description: 仅角色为 admin 的用户可访问
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/common.Response'
-        "403":
-          description: Forbidden
-          schema:
-            $ref: '#/definitions/common.Response'
-      security:
-      - BearerAuth: []
-      summary: 仅管理员可访问
-      tags:
-      - 权限
   /api/login:
     post:
       consumes:
@@ -70,7 +51,26 @@ paths:
       summary: 用户登录
       tags:
       - 用户
-  /api/logout:
+  /api/user/admin:
+    get:
+      description: 仅角色为 admin 的用户可访问
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/common.Response'
+        "403":
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/common.Response'
+      security:
+      - BearerAuth: []
+      summary: 仅管理员可访问
+      tags:
+      - 权限
+  /api/user/logout:
     get:
       description: 将当前 JWT 加入黑名单
       produces:
@@ -85,7 +85,7 @@ paths:
       summary: 用户登出
       tags:
       - 用户
-  /api/profile:
+  /api/user/profile:
     get:
       description: 返回当前登录用户的用户名与角色
       produces:
@@ -100,7 +100,7 @@ paths:
       summary: 获取用户信息
       tags:
       - 用户
-  /api/write:
+  /api/user/write:
     post:
       description: 需要拥有 write 权限的用户才可以访问
       produces:

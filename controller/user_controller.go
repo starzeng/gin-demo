@@ -13,15 +13,20 @@ import (
 type userController struct{}
 
 func (u userController) RouteRegister(group *gin.RouterGroup) {
+	println("userController route register")
+
 	group.POST("/login", Login)
 
 	auth := group.Group("/user", middleware.JWTAuth())
-
 	auth.GET("/profile", Profile)
 	auth.GET("/logout", Logout)
 	auth.GET("/admin", middleware.RequireRole("admin"), AdminOnly)
 	auth.POST("/write", middleware.RequirePermission("write"), WriteData)
+}
 
+func init() {
+	println("user controller init...")
+	router.Register(&userController{})
 }
 
 type LoginReq struct {
@@ -65,7 +70,7 @@ func Login(c *gin.Context) {
 // @Security BearerAuth
 // @Produce json
 // @Success 200 {object} common.Response
-// @Router /api/logout [get]
+// @Router /api/user/logout [get]
 func Logout(c *gin.Context) {
 	jti := c.GetString("jti")
 	exp := time.Minute * 5
@@ -80,7 +85,7 @@ func Logout(c *gin.Context) {
 // @Security BearerAuth
 // @Produce json
 // @Success 200 {object} common.Response
-// @Router /api/profile [get]
+// @Router /api/user/profile [get]
 func Profile(c *gin.Context) {
 	utils.Set("hello world")
 	common.Success(c, gin.H{"username": c.GetString("username"), "role": c.GetString("role")})
@@ -94,7 +99,7 @@ func Profile(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} common.Response
 // @Failure 403 {object} common.Response
-// @Router /api/admin [get]
+// @Router /api/user/admin [get]
 func AdminOnly(c *gin.Context) {
 	common.Success(c, gin.H{"msg": "admin 访问成功"})
 }
@@ -107,11 +112,7 @@ func AdminOnly(c *gin.Context) {
 // @Produce json
 // @Success 200 {object} common.Response
 // @Failure 403 {object} common.Response
-// @Router /api/write [post]
+// @Router /api/user/write [post]
 func WriteData(c *gin.Context) {
 	common.Success(c, gin.H{"msg": "写入成功"})
-}
-
-func init() {
-	router.Register(&userController{})
 }

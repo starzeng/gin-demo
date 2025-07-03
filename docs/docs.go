@@ -15,37 +15,6 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/api/admin": {
-            "get": {
-                "security": [
-                    {
-                        "BearerAuth": []
-                    }
-                ],
-                "description": "仅角色为 admin 的用户可访问",
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "权限"
-                ],
-                "summary": "仅管理员可访问",
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/common.Response"
-                        }
-                    },
-                    "403": {
-                        "description": "Forbidden",
-                        "schema": {
-                            "$ref": "#/definitions/common.Response"
-                        }
-                    }
-                }
-            }
-        },
         "/api/login": {
             "post": {
                 "description": "使用用户名和密码进行登录，返回 JWT Token",
@@ -86,7 +55,38 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/logout": {
+        "/api/user/admin": {
+            "get": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "仅角色为 admin 的用户可访问",
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "权限"
+                ],
+                "summary": "仅管理员可访问",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    },
+                    "403": {
+                        "description": "Forbidden",
+                        "schema": {
+                            "$ref": "#/definitions/common.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/user/logout": {
             "get": {
                 "security": [
                     {
@@ -111,7 +111,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/profile": {
+        "/api/user/profile": {
             "get": {
                 "security": [
                     {
@@ -136,7 +136,7 @@ const docTemplate = `{
                 }
             }
         },
-        "/api/write": {
+        "/api/user/write": {
             "post": {
                 "security": [
                     {
@@ -216,6 +216,8 @@ var SwaggerInfo = &swag.Spec{
 	Description:      "示例项目：JWT + RBAC + Redis 黑名单 + Swagger 接口文档",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,
+	LeftDelim:        "{{",
+	RightDelim:       "}}",
 }
 
 func init() {

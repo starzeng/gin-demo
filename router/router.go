@@ -7,7 +7,9 @@ import (
 
 // InitRouter 初始化路由
 func InitRouter(r *gin.Engine) {
-	api := r.Group(config.AppConfig.Server.RelativePath)
+	path := config.AppConfig.Server.RelativePath
+	println("[init router path] " + path)
+	api := r.Group(path)
 	loadRoutes(api)
 }
 
@@ -26,6 +28,9 @@ func Register(r RouteRegister) {
 
 // loadRoutes 注册入口
 func loadRoutes(rg *gin.RouterGroup) {
+
+	println("注册的 controller 数量：", len(routeRegisters))
+
 	for _, register := range routeRegisters {
 		register.RouteRegister(rg)
 	}

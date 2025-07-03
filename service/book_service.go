@@ -3,25 +3,25 @@ package service
 import (
 	"errors"
 	"starzeng.com/gin-demo/model"
-	"starzeng.com/gin-demo/repos"
+	"starzeng.com/gin-demo/repository"
 	"time"
 )
 
 func CreateBook(book model.Book) error {
-	return repos.Create(book)
+	return repository.Create(book)
 }
 
 func ListBook(bookQuery model.BookQuery) ([]model.Book, int64, error) {
-	return repos.List(bookQuery)
+	return repository.List(bookQuery)
 }
 
 func GetBook(id uint64) (*model.Book, error) {
-	return repos.GetById(id)
+	return repository.GetById(id)
 }
 
 func UpdateBook(book model.Book) error {
 	// 查询数据
-	exist, err := repos.GetById(book.ID)
+	exist, err := repository.GetById(book.ID)
 	if err != nil {
 		return err
 	}
@@ -51,9 +51,9 @@ func UpdateBook(book model.Book) error {
 	exist.Version += 1
 	exist.UpdatedAt = time.Now()
 
-	return repos.Update(exist)
+	return repository.Update(exist)
 }
 
 func DeleteBook(id uint64) error {
-	return repos.Delete(id)
+	return repository.Delete(id)
 }

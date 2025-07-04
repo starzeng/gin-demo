@@ -1,15 +1,16 @@
-package config
+package db
 
 import (
 	"fmt"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"starzeng.com/gin-demo/config"
 )
 
 var DB *gorm.DB
 
 func InitMySQL() {
-	cfg := AppConfig.MySQL
+	cfg := config.AppConfig.MySQL
 
 	dsn := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8mb4&parseTime=True&loc=Local",
 		cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DBName)

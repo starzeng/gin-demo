@@ -3,10 +3,11 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"starzeng.com/gin-demo/common"
+	"starzeng.com/gin-demo/internal/book/model"
+	"starzeng.com/gin-demo/internal/book/service"
 	"starzeng.com/gin-demo/middleware"
-	"starzeng.com/gin-demo/model"
 	"starzeng.com/gin-demo/router"
-	"starzeng.com/gin-demo/service"
+	"starzeng.com/gin-demo/utils"
 	"strconv"
 )
 
@@ -128,7 +129,7 @@ func GetBook(context *gin.Context) {
 // @Produce json
 // @Param data body model.BookQuery true "查询参数（如分页）"
 // @Security BearerAuth
-// @Success 200 {object} common.Response{data=model.PageResult{list=[]model.Book}}
+// @Success 200 {object} common.Response{data=utils.PageResult{list=[]model.Book}}
 // @Failure 400 {object} common.Response
 // @Failure 500 {object} common.Response
 // @Router /api/book/list [post]
@@ -147,7 +148,7 @@ func ListBooks(context *gin.Context) {
 		return
 	}
 
-	resp := model.PageResult{
+	resp := utils.PageResult{
 		Total:    total,
 		Page:     bookQuery.Page,
 		PageSize: bookQuery.PageSize,

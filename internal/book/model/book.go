@@ -2,6 +2,7 @@ package model
 
 import (
 	"gorm.io/gorm"
+	"starzeng.com/gin-demo/utils"
 	"time"
 )
 
@@ -20,5 +21,5 @@ type Book struct {
 type BookQuery struct {
 	Title  string `json:"title" binding:"omitempty,max=200"`  // 书名模糊查询
 	Author string `json:"author" binding:"omitempty,max=100"` // 作者模糊查询
-	Pagination
+	utils.Pagination
 }

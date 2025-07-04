@@ -1,10 +1,11 @@
-package config
+package redis
 
 import (
 	"context"
 	"fmt"
 	"github.com/redis/go-redis/v9"
 	"log"
+	"starzeng.com/gin-demo/config"
 	"strconv"
 	"time"
 )
@@ -13,7 +14,7 @@ var RDB *redis.Client
 var Ctx = context.Background()
 
 func InitRedis() {
-	cfg := AppConfig.Redis
+	cfg := config.AppConfig.Redis
 	RDB = redis.NewClient(&redis.Options{
 		Addr:     cfg.Host + ":" + strconv.Itoa(cfg.Port),
 		Password: cfg.Password,

@@ -3,12 +3,12 @@ package repository
 import (
 	"errors"
 	"gorm.io/gorm"
-	"starzeng.com/gin-demo/config"
-	"starzeng.com/gin-demo/model"
+	"starzeng.com/gin-demo/internal/book/model"
+	"starzeng.com/gin-demo/pkg/db"
 )
 
 func Create(book model.Book) error {
-	return config.DB.Create(&book).Error
+	return db.DB.Create(&book).Error
 }
 
 func List(bookQuery model.BookQuery) ([]model.Book, int64, error) {
@@ -20,7 +20,7 @@ func List(bookQuery model.BookQuery) ([]model.Book, int64, error) {
 	author := bookQuery.Author
 	title := bookQuery.Title
 
-	query := config.DB.Model(&model.Book{})
+	query := db.DB.Model(&model.Book{})
 	if title != "" {
 		query.Where("title like ?", title+"%")
 	}
@@ -40,7 +40,7 @@ func List(bookQuery model.BookQuery) ([]model.Book, int64, error) {
 
 func GetById(id uint64) (*model.Book, error) {
 	var book *model.Book
-	err := config.DB.First(&book, id).Error
+	err := db.DB.First(&book, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {
 		return nil, nil
 	}
@@ -48,9 +48,9 @@ func GetById(id uint64) (*model.Book, error) {
 }
 
 func Update(book *model.Book) error {
-	return config.DB.Save(book).Error
+	return db.DB.Save(book).Error
 }
 
 func Delete(id uint64) error {
-	return config.DB.Delete(&model.Book{}, id).Error
+	return db.DB.Delete(&model.Book{}, id).Error
 }

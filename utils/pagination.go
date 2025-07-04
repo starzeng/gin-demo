@@ -1,4 +1,4 @@
-package model
+package utils
 
 type Pagination struct {
 	Page     int `json:"page" binding:"omitempty,min=1"`              // 当前页码，默认1
@@ -21,13 +21,4 @@ func (p *Pagination) GetOffset() int {
 		p.PageSize = 10
 	}
 	return (p.Page - 1) * p.PageSize
-}
-
-func (q *BookQuery) Default() {
-	if q.Page <= 0 {
-		q.Page = 1
-	}
-	if q.PageSize <= 0 {
-		q.PageSize = 10
-	}
 }

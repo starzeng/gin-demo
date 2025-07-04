@@ -10,8 +10,7 @@ import (
 func RecoveryWithJSON() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		defer func() {
-			var err any = recover()
-			if err != nil {
+			if err := recover(); err != nil {
 				log.Printf("[PANIC] %v\n%s", err, debug.Stack())
 				common.Error(c, common.CodeInternalError, "服务器内部错误")
 				c.Abort()

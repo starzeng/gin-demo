@@ -5,7 +5,7 @@ import (
 	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
 	"starzeng.com/gin-demo/common"
-	"starzeng.com/gin-demo/model"
+	"starzeng.com/gin-demo/internal/user/model"
 	"starzeng.com/gin-demo/utils"
 	"strings"
 	"time"

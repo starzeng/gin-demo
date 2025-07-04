@@ -2,8 +2,8 @@ package service
 
 import (
 	"errors"
-	"starzeng.com/gin-demo/model"
-	"starzeng.com/gin-demo/repository"
+	"starzeng.com/gin-demo/internal/book/model"
+	"starzeng.com/gin-demo/internal/book/repository"
 	"time"
 )
 

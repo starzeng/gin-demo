@@ -109,7 +109,7 @@ const docTemplate = `{
                                         "data": {
                                             "allOf": [
                                                 {
-                                                    "$ref": "#/definitions/model.PageResult"
+                                                    "$ref": "#/definitions/utils.PageResult"
                                                 },
                                                 {
                                                     "type": "object",
@@ -546,7 +546,7 @@ const docTemplate = `{
                 }
             }
         },
-        "model.PageResult": {
+        "utils.PageResult": {
             "type": "object",
             "properties": {
                 "list": {

@@ -38,9 +38,9 @@ type Config struct {
 var AppConfig *Config
 
 func LoadConfig() {
-	viper.SetConfigName("config") // 文件名
-	viper.SetConfigType("yaml")   // 文件类型
-	viper.AddConfigPath("./conf") // 配置路径
+	viper.SetConfigName("config")   // 文件名
+	viper.SetConfigType("yaml")     // 文件类型
+	viper.AddConfigPath("./config") // 配置路径
 
 	err := viper.ReadInConfig()
 	if err != nil {

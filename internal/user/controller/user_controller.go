@@ -3,8 +3,8 @@ package controller
 import (
 	"github.com/gin-gonic/gin"
 	"starzeng.com/gin-demo/common"
+	"starzeng.com/gin-demo/internal/user/model"
 	"starzeng.com/gin-demo/middleware"
-	"starzeng.com/gin-demo/model"
 	"starzeng.com/gin-demo/router"
 	"starzeng.com/gin-demo/utils"
 	"time"
@@ -13,8 +13,6 @@ import (
 type userController struct{}
 
 func (u userController) RouteRegister(group *gin.RouterGroup) {
-	println("userController route register")
-
 	group.POST("/login", Login)
 
 	auth := group.Group("/user", middleware.JWTAuth())

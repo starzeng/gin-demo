@@ -3,10 +3,14 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"starzeng.com/gin-demo/config"
+	"starzeng.com/gin-demo/middleware"
 )
 
 // InitRouter 初始化路由
 func InitRouter(r *gin.Engine) {
+	// 使用日志中间件
+	r.Use(middleware.ZapLogger())
+
 	path := config.AppConfig.Server.RelativePath
 	println("[init router path] " + path)
 	api := r.Group(path)

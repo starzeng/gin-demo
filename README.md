@@ -1,8 +1,11 @@
 # gin-demo
 
+### 一个基于 Gin 的模块化单体项目示例，支持按业务模块分层（Controller / Service / Repository / Model），适用于中小型后端项目开发。
+
 ## 项目结构
 ```go
-├── main.go                         # 启动入口（如 main.go）
+gin-demo/
+├── main.go                      # 启动入口（如 main.go）
 │
 ├── internal/                    # 内部业务模块，不能被外部调用
 │   ├── user/                    # user 模块

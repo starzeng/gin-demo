@@ -6,7 +6,6 @@ import (
 	"starzeng.com/gin-demo/internal/book/model"
 	"starzeng.com/gin-demo/internal/book/service"
 	"starzeng.com/gin-demo/middleware"
-	"starzeng.com/gin-demo/pkg/logger"
 	"starzeng.com/gin-demo/router"
 	"starzeng.com/gin-demo/utils"
 	"strconv"
@@ -108,9 +107,6 @@ func UpdateBook(c *gin.Context) {
 // @Failure 500 {object} common.Response
 // @Router /api/book/{id} [get]
 func GetBook(c *gin.Context) {
-
-	logger.Info("开始 get Gook Controller")
-
 	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {

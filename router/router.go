@@ -3,15 +3,12 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"starzeng.com/gin-demo/config"
-	"starzeng.com/gin-demo/pkg/logger"
 	"strconv"
 )
 
 // InitRouter 初始化路由
 func InitRouter(r *gin.Engine) {
 	path := config.AppConfig.Server.RelativePath
-	logger.Debug("[init router path] " + path)
-
 	api := r.Group(path)
 	loadRoutes(api)
 }
@@ -32,7 +29,7 @@ func Register(r RouteRegister) {
 // loadRoutes 注册入口
 func loadRoutes(rg *gin.RouterGroup) {
 
-	logger.Debug("注册的 controller 数量：" + strconv.Itoa(len(routeRegisters)))
+	println("注册的 controller 数量：" + strconv.Itoa(len(routeRegisters)))
 
 	for _, register := range routeRegisters {
 		register.RouteRegister(rg)

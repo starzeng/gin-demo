@@ -5,7 +5,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"starzeng.com/gin-demo/internal/book/model"
 	"starzeng.com/gin-demo/internal/book/repository"
-	"starzeng.com/gin-demo/pkg/logger"
 	"starzeng.com/gin-demo/pkg/redis"
 	"strconv"
 	"time"
@@ -20,8 +19,6 @@ func ListBook(c *gin.Context, bookQuery model.BookQuery) ([]model.Book, int64, e
 }
 
 func GetBook(c *gin.Context, id uint64) (*model.Book, error) {
-	logger.Info("开始 get Gook service")
-
 	key := "id:" + strconv.FormatUint(id, 10)
 	_ = redis.Set(key, id, 0)
 

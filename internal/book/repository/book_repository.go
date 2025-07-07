@@ -5,7 +5,6 @@ import (
 	"gorm.io/gorm"
 	"starzeng.com/gin-demo/internal/book/model"
 	"starzeng.com/gin-demo/pkg/db"
-	"starzeng.com/gin-demo/pkg/logger"
 )
 
 func Create(book model.Book) error {
@@ -40,7 +39,6 @@ func List(bookQuery model.BookQuery) ([]model.Book, int64, error) {
 }
 
 func GetById(id uint64) (*model.Book, error) {
-	logger.Info("开始 get Gook repository")
 	var book *model.Book
 	err := db.DB.First(&book, id).Error
 	if errors.Is(err, gorm.ErrRecordNotFound) {

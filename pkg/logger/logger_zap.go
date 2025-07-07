@@ -3,45 +3,48 @@ package logger
 import (
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
+	"gopkg.in/natefinch/lumberjack.v2"
+	"os"
 )
 
-var IsDev = true
-
-var log *zap.SugaredLogger
+var Log *zap.Logger
 
 func init() {
-	var _ zapcore.Encoder
+	encoderConfig := zap.NewProductionEncoderConfig()
+	encoderConfig.TimeKey = "time"
+	encoderConfig.EncodeTime = zapcore.ISO8601TimeEncoder
+	encoderConfig.EncodeLevel = zapcore.CapitalLevelEncoder
 
-	if IsDev {
-		encCfg := zap.NewDevelopmentEncoderConfig()
-		encCfg.EncodeLevel = zapcore.CapitalColorLevelEncoder
-		_ = zapcore.NewConsoleEncoder(encCfg)
-	} else {
-		encCfg := zap.NewProductionEncoderConfig()
-		_ = zapcore.NewJSONEncoder(encCfg)
-	}
+	// 日志输出到文件，使用 lumberjack 进行切割
+	fileWriter := zapcore.AddSync(&lumberjack.Logger{
+		Filename:   "./logs/app.Log",
+		MaxSize:    10,
+		MaxBackups: 5,
+		MaxAge:     30,
+		Compress:   true,
+	})
 
-	logger, _ := zap.NewProduction()
-	log = logger.Sugar()
+	consoleWriter := zapcore.Lock(os.Stdout)
 
+	fileCore := zapcore.NewCore(zapcore.NewJSONEncoder(encoderConfig), fileWriter, zapcore.InfoLevel)
+	consoleCore := zapcore.NewCore(zapcore.NewConsoleEncoder(encoderConfig), consoleWriter, zapcore.DebugLevel)
+
+	core := zapcore.NewTee(fileCore, consoleCore)
+	Log = zap.New(core, zap.AddCaller(), zap.AddCallerSkip(1))
 }
 
-func Debugw(msg string, keysAndValues ...interface{}) {
-	log.Debugw(msg)
+func Info(msg string, fields ...zap.Field) {
+	Log.Info(msg, fields...)
 }
 
-func Infow(msg string, keysAndValues ...interface{}) {
-	log.Infof(msg)
+func Error(msg string, fields ...zap.Field) {
+	Log.Error(msg, fields...)
 }
 
-func Warnw(msg string, keysAndValues ...interface{}) {
-	log.Warnw(msg)
+func Debug(msg string, fields ...zap.Field) {
+	Log.Debug(msg, fields...)
 }
 
-func Errorw(msg string, keysAndValues ...interface{}) {
-	log.Errorw(msg)
-}
-
-func Fatalw(msg string, keysAndValues ...interface{}) {
-	log.Fatalw(msg)
+func Warn(msg string, fields ...zap.Field) {
+	Log.Warn(msg, fields...)
 }

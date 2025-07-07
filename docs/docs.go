@@ -460,10 +460,14 @@ const docTemplate = `{
             "type": "object",
             "properties": {
                 "code": {
+                    "description": "Code 表示响应状态码",
                     "type": "integer"
                 },
-                "data": {},
+                "data": {
+                    "description": "Data 表示响应携带的数据"
+                },
                 "message": {
+                    "description": "Message 表示响应消息",
                     "type": "string"
                 }
             }

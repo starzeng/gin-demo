@@ -4,13 +4,14 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-
+	"go.uber.org/zap"
 	"starzeng.com/gin-demo/config"
 	"starzeng.com/gin-demo/docs"
 	_ "starzeng.com/gin-demo/internal/book/controller"
 	_ "starzeng.com/gin-demo/internal/user/controller"
 	"starzeng.com/gin-demo/middleware"
 	"starzeng.com/gin-demo/pkg/db"
+	"starzeng.com/gin-demo/pkg/logger"
 	"starzeng.com/gin-demo/pkg/redis"
 	"starzeng.com/gin-demo/router"
 )
@@ -27,7 +28,7 @@ func main() {
 	// 加载配置
 	config.LoadConfig()
 
-	// 初始化
+	// 初始化数据库
 	db.InitMySQL()
 	redis.InitRedis()
 
@@ -36,7 +37,19 @@ func main() {
 		panic("模型迁移失败: " + err.Error())
 	}
 
-	r := gin.Default()
+	// 全局错误处理
+	defer func(Log *zap.Logger) {
+		err := Log.Sync()
+		if err != nil {
+
+		}
+	}(logger.Log)
+
+	//r := gin.Default()
+	r := gin.New()
+
+	// 使用日志中间件
+	r.Use(middleware.Logger())
 
 	// 初始化路由
 	router.InitRouter(r)
@@ -45,10 +58,7 @@ func main() {
 	docs.SwaggerInfo.BasePath = "/"
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
-	println("API文档: http://localhost:8080/swagger/index.html")
-
-	// 全局错误处理
-	r.Use(gin.Logger(), middleware.RecoveryWithJSON())
+	logger.Info("API文档: http://localhost:8080/swagger/index.html")
 
 	err := r.Run(config.GetServerAddr())
 	if err != nil {

@@ -2,24 +2,33 @@ package service
 
 import (
 	"errors"
+	"github.com/gin-gonic/gin"
 	"starzeng.com/gin-demo/internal/book/model"
 	"starzeng.com/gin-demo/internal/book/repository"
+	"starzeng.com/gin-demo/pkg/logger"
+	"starzeng.com/gin-demo/pkg/redis"
+	"strconv"
 	"time"
 )
 
-func CreateBook(book model.Book) error {
+func CreateBook(c *gin.Context, book model.Book) error {
 	return repository.Create(book)
 }
 
-func ListBook(bookQuery model.BookQuery) ([]model.Book, int64, error) {
+func ListBook(c *gin.Context, bookQuery model.BookQuery) ([]model.Book, int64, error) {
 	return repository.List(bookQuery)
 }
 
-func GetBook(id uint64) (*model.Book, error) {
+func GetBook(c *gin.Context, id uint64) (*model.Book, error) {
+	logger.Info("开始 get Gook service")
+
+	key := "id:" + strconv.FormatUint(id, 10)
+	_ = redis.Set(key, id, 0)
+
 	return repository.GetById(id)
 }
 
-func UpdateBook(book model.Book) error {
+func UpdateBook(c *gin.Context, book model.Book) error {
 	// 查询数据
 	exist, err := repository.GetById(book.ID)
 	if err != nil {
@@ -54,6 +63,6 @@ func UpdateBook(book model.Book) error {
 	return repository.Update(exist)
 }
 
-func DeleteBook(id uint64) error {
+func DeleteBook(c *gin.Context, id uint64) error {
 	return repository.Delete(id)
 }

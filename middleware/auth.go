@@ -6,14 +6,14 @@ import (
 	"github.com/google/uuid"
 	"starzeng.com/gin-demo/common"
 	"starzeng.com/gin-demo/internal/user/model"
-	"starzeng.com/gin-demo/utils"
+	"starzeng.com/gin-demo/pkg/redis"
 	"strings"
 	"time"
 )
 
 var JwtKey = []byte("my_super_secret_key")
 
-const TokenExpireDuration = time.Minute * 5
+const TokenExpireDuration = time.Hour * 24
 const RefreshThreshold = time.Minute * 2
 
 type MyClaims struct {
@@ -54,7 +54,7 @@ func JWTAuth() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		if utils.BlacklistCheck(claims.ID) {
+		if redis.BlacklistCheck(claims.ID) {
 			common.Error(c, common.CodeUnauthorized, "token 已注销")
 			c.Abort()
 			return

@@ -6,6 +6,7 @@ import (
 	"starzeng.com/gin-demo/internal/book/model"
 	"starzeng.com/gin-demo/internal/book/service"
 	"starzeng.com/gin-demo/middleware"
+	"starzeng.com/gin-demo/pkg/logger"
 	"starzeng.com/gin-demo/router"
 	"starzeng.com/gin-demo/utils"
 	"strconv"
@@ -39,21 +40,21 @@ func (b bookController) RouteRegister(group *gin.RouterGroup) {
 // @Failure 400 {object} common.Response
 // @Failure 500 {object} common.Response
 // @Router /api/book/{id} [delete]
-func DeleteBook(context *gin.Context) {
-	idStr := context.Param("id")
+func DeleteBook(c *gin.Context) {
+	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 
 	if err != nil {
-		common.Error(context, common.CodeInvalidParams, err.Error())
+		common.Error(c, common.CodeInvalidParams, err.Error())
 		return
 	}
 
-	err = service.DeleteBook(uint64(id))
+	err = service.DeleteBook(c, uint64(id))
 	if err != nil {
-		common.Error(context, common.CodeInternalError, err.Error())
+		common.Error(c, common.CodeInternalError, err.Error())
 		return
 	}
-	common.Success(context, nil)
+	common.Success(c, nil)
 }
 
 // UpdateBook 更新书籍
@@ -69,30 +70,30 @@ func DeleteBook(context *gin.Context) {
 // @Failure 400 {object} common.Response
 // @Failure 500 {object} common.Response
 // @Router /api/book/{id} [put]
-func UpdateBook(context *gin.Context) {
-	idStr := context.Param("id")
+func UpdateBook(c *gin.Context) {
+	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		common.Error(context, common.CodeInvalidParams, err.Error())
+		common.Error(c, common.CodeInvalidParams, err.Error())
 		return
 	}
 
 	var book model.Book
-	err = context.ShouldBindJSON(&book)
+	err = c.ShouldBindJSON(&book)
 	if err != nil {
-		common.Error(context, common.CodeInvalidParams, err.Error())
+		common.Error(c, common.CodeInvalidParams, err.Error())
 		return
 	}
 
 	book.ID = uint64(id)
-	err = service.UpdateBook(book)
+	err = service.UpdateBook(c, book)
 
 	if err != nil {
-		common.Error(context, common.CodeInternalError, err.Error())
+		common.Error(c, common.CodeInternalError, err.Error())
 		return
 	}
 
-	common.Success(context, nil)
+	common.Success(c, nil)
 }
 
 // GetBook 获取书籍详情
@@ -106,19 +107,22 @@ func UpdateBook(context *gin.Context) {
 // @Failure 400 {object} common.Response
 // @Failure 500 {object} common.Response
 // @Router /api/book/{id} [get]
-func GetBook(context *gin.Context) {
-	idStr := context.Param("id")
+func GetBook(c *gin.Context) {
+
+	logger.Info("开始 get Gook Controller")
+
+	idStr := c.Param("id")
 	id, err := strconv.Atoi(idStr)
 	if err != nil {
-		common.Error(context, common.CodeInvalidParams, err.Error())
+		common.Error(c, common.CodeInvalidParams, err.Error())
 		return
 	}
-	book, err := service.GetBook(uint64(id))
+	book, err := service.GetBook(c, uint64(id))
 	if err != nil {
-		common.Error(context, common.CodeInternalError, err.Error())
+		common.Error(c, common.CodeInternalError, err.Error())
 		return
 	}
-	common.Success(context, book)
+	common.Success(c, book)
 }
 
 // ListBooks 获取书籍列表
@@ -133,18 +137,18 @@ func GetBook(context *gin.Context) {
 // @Failure 400 {object} common.Response
 // @Failure 500 {object} common.Response
 // @Router /api/book/list [post]
-func ListBooks(context *gin.Context) {
+func ListBooks(c *gin.Context) {
 	var bookQuery model.BookQuery
-	err := context.ShouldBindJSON(&bookQuery)
+	err := c.ShouldBindJSON(&bookQuery)
 	if err != nil {
-		common.Error(context, common.CodeInvalidParams, err.Error())
+		common.Error(c, common.CodeInvalidParams, err.Error())
 		return
 	}
 
-	bookList, total, err := service.ListBook(bookQuery)
+	bookList, total, err := service.ListBook(c, bookQuery)
 
 	if err != nil {
-		common.Error(context, common.CodeInternalError, err.Error())
+		common.Error(c, common.CodeInternalError, err.Error())
 		return
 	}
 
@@ -155,7 +159,7 @@ func ListBooks(context *gin.Context) {
 		List:     bookList,
 	}
 
-	common.Success(context, resp)
+	common.Success(c, resp)
 }
 
 // CreateBook 创建书籍
@@ -170,17 +174,17 @@ func ListBooks(context *gin.Context) {
 // @Failure 400 {object} common.Response
 // @Failure 500 {object} common.Response
 // @Router /api/book [post]
-func CreateBook(context *gin.Context) {
+func CreateBook(c *gin.Context) {
 	var book model.Book
-	err := context.ShouldBindJSON(&book)
+	err := c.ShouldBindJSON(&book)
 	if err != nil {
-		common.Error(context, common.CodeInvalidParams, err.Error())
+		common.Error(c, common.CodeInvalidParams, err.Error())
 		return
 	}
-	err = service.CreateBook(book)
+	err = service.CreateBook(c, book)
 	if err != nil {
-		common.Error(context, common.CodeInternalError, err.Error())
+		common.Error(c, common.CodeInternalError, err.Error())
 		return
 	}
-	common.Success(context, "创建成功")
+	common.Success(c, "创建成功")
 }

@@ -41,3 +41,38 @@ func InitRedis() {
 
 	fmt.Println("Redis连接成功")
 }
+
+// Set 设置 key，带过期时间（秒）
+func Set(key string, value interface{}, expiration time.Duration) error {
+	return RDB.Set(Ctx, key, value, expiration).Err()
+}
+
+// Get 获取 key 对应的值，返回字符串和错误
+func Get(key string) (string, error) {
+	return RDB.Get(Ctx, key).Result()
+}
+
+// Del 删除 key
+func Del(keys ...string) (int64, error) {
+	return RDB.Del(Ctx, keys...).Result()
+}
+
+// Exists 判断 key 是否存在，存在返回 true
+func Exists(key string) (bool, error) {
+	cnt, err := RDB.Exists(Ctx, key).Result()
+	return cnt > 0, err
+}
+
+// Expire 设置 key 过期时间，expiration 单位秒
+func Expire(key string, expiration time.Duration) (bool, error) {
+	return RDB.Expire(Ctx, key, expiration).Result()
+}
+
+func BlacklistAdd(jti string, ttl int64) {
+	RDB.Set(Ctx, "blacklist:"+jti, 1, time.Duration(ttl))
+}
+
+func BlacklistCheck(jti string) bool {
+	exists, _ := RDB.Exists(Ctx, "blacklist:"+jti).Result()
+	return exists > 0
+}

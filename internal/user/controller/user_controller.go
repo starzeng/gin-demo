@@ -5,8 +5,8 @@ import (
 	"starzeng.com/gin-demo/common"
 	"starzeng.com/gin-demo/internal/user/model"
 	"starzeng.com/gin-demo/middleware"
+	"starzeng.com/gin-demo/pkg/redis"
 	"starzeng.com/gin-demo/router"
-	"starzeng.com/gin-demo/utils"
 	"time"
 )
 
@@ -72,7 +72,7 @@ func Login(c *gin.Context) {
 func Logout(c *gin.Context) {
 	jti := c.GetString("jti")
 	exp := time.Minute * 5
-	utils.BlacklistAdd(jti, int64(exp.Seconds()))
+	redis.BlacklistAdd(jti, int64(exp.Seconds()))
 	common.Success(c, gin.H{"message": "退出成功"})
 }
 
@@ -85,7 +85,7 @@ func Logout(c *gin.Context) {
 // @Success 200 {object} common.Response
 // @Router /api/user/profile [get]
 func Profile(c *gin.Context) {
-	utils.Set("hello world")
+	_ = redis.Set("hello", "hello world", 0)
 	common.Success(c, gin.H{"username": c.GetString("username"), "role": c.GetString("role")})
 }
 
